@@ -11,6 +11,6 @@ export const LED = {
     BASIC_LED_PROTOCOL_FORMAT: [2, 1, 1, 0x10, 0, 0, 0, 84, 3],
     RGB_LED_PROTOCOL_FORMAT: [35, 49, 0, 0, 0, 38],
     serialportOption: {
-        BAUDRATE: 9600
+        baudrate: 9600
     }
 };
