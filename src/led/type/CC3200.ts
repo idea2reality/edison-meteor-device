@@ -1,5 +1,6 @@
 import Led from '../Led';
 import serial from '../Serial';
+// import serial from '../Serial.test';
 import {LED as config} from '../../config';
 
 
@@ -20,33 +21,9 @@ export default class CC3200 extends Led {
 
         return new Promise((resolve, reject) => {
             serial.write(protoc[0])
-                .then(() =>
-                    serial.write(protoc[1])
-                        .then(() => resolve())
-                        .catch((err) => reject(err)))
-                .catch((err) => reject(err));
+                .then(() => { return serial.write(protoc[1]) })
+                .then(resolve)
+                .catch((reason) => reject(reason));
         });
-    }
-
-    setLedOff(): Promise<any> {
-        return serial.write(this.getProtoc(false))
-            .then(() => { this.value = false; })
-    }
-
-    getProtoc(status: boolean) {
-        var protoc = this.protocFormat;
-
-        if (status) {
-            protoc[4] = 100;
-            protoc[5] = 100;
-            protoc[6] = 100;
-        }
-        else {
-            protoc[4] = 0;
-            protoc[5] = 0;
-            protoc[6] = 0;
-        }
-
-        return protoc;
     }
 }

@@ -10,9 +10,7 @@ abstract class Led {
 
     getStatus() { return this.value; }
 
-    abstract getProtoc(status);
     abstract setValue(status): Promise<any>;
-    abstract setLedOff(): Promise<any>;
 }
 
 export default Led;

@@ -1,17 +1,36 @@
 import {LED as config} from '../config';
 import * as winston from 'winston';
-import {SERIAL_PATH} from '../config';
 
-var SerialPort = require('serialport').SerialPort;
+var isDev = process.env.NODE_ENV === 'development';
+
+var mraa;
+var uart;
+var SERIAL_PATH;
+var SerialPort;
+
+// DEVELOPMENT MODE
+if (!isDev) {
+    mraa = require('mraa');
+    uart = new mraa.Uart(0);
+    SERIAL_PATH = uart.getDevicePath();
+
+    SerialPort = require('serialport').SerialPort;
+}
 
 class Serial {
     private serialPort;
 
     constructor() {
-        this.initialize();
+        // DEVELOPMENT MODE
+        if (!isDev)
+            this.initialize();
     }
 
     get isOpen(): boolean {
+        // DEVELOPMENT MODE
+        if (isDev)
+            return true;
+
         if (this.serialPort === undefined)
             return false;
         return this.serialPort.isOpen();
@@ -29,6 +48,14 @@ class Serial {
                 buf = new Buffer(protoc, 'ascii');
             else
                 buf = new Buffer(protoc);
+
+            // DEVELOPMENT MODE
+            if (isDev) {
+                winston.info('[led] Serial: Written -> ' + protoc);
+                resolve();
+                return;
+            }
+
             // Write
             this.serialPort.write(buf, (err) => {
                 if (err) return reject(err);

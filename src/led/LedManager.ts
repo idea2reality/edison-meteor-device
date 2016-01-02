@@ -1,6 +1,4 @@
 import {MY_DEVICE_ID, LED} from '../config';
-import RgbLed from './type/RgbLed';
-import BasicLed from './type/BasicLed';
 import CC3200 from './type/CC3200';
 import Led from './Led';
 import {ddpClient} from '../meteor';
@@ -14,20 +12,15 @@ class LedManager {
 
     loadLeds(): Promise<any> {
         return new Promise((resolve, reject) =>
-            ddpClient.subscribe('device', [MY_DEVICE_ID],
-                function() {
-                    var leds: any[] = ddpClient.collections.devices[MY_DEVICE_ID].leds;
-                    for (let led of leds) {
-                        if (led.type == 'rgb')
-                            this.ledMap.set(led.id, new RgbLed(led.id, LED.RGB_LED_PROTOCOL_FORMAT));
-                        if (led.type == 'basic')
-                            this.ledMap.set(led.id, new BasicLed(led.id, LED.BASIC_LED_PROTOCOL_FORMAT));
-                        if (led.type == 'cc3200')
-                            this.ledMap.set(led.id, new CC3200(led.id))
-                    }
+            ddpClient.subscribe('device', [MY_DEVICE_ID], () => {
+                var leds: any[] = ddpClient.collections.devices[MY_DEVICE_ID].leds;
+                for (let led of leds) {
+                    if (led.type == 'cc3200')
+                        this.ledMap.set(led._id, new CC3200(led._id))
+                }
 
-                    resolve();
-                }));
+                resolve();
+            }));
     }
 
     getLed(id: string): Led { return this.ledMap.get(id); }

@@ -25,5 +25,5 @@ startup()
 function onNewMessage(msg) {
     ledManager.setLed(msg.ledId, msg.value)
         .then(() => { return applyLed(msg._id, msg.value) })
-        .catch((reason) => { return cancelLed(msg._id, reason) });
+        .catch((reason) => {console.log(reason); return cancelLed(msg._id, reason) });
 }
