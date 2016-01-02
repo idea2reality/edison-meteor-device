@@ -1,0 +1,34 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"noLib": true,
+		"outDir": "js",
+		"rootDir": "src"
+	},
+	"filesGlob": [
+		"src/**/*.ts",
+		"node_modules/typescript/lib/lib.es6.d.ts",
+		"typings/tsd.d.ts"
+	],
+	"files": [
+		"src/app.ts",
+		"src/config.ts",
+		"src/led/Led.ts",
+		"src/led/LedManager.ts",
+		"src/led/Serial.ts",
+		"src/led/type/BasicLed.ts",
+		"src/led/type/CC3200.ts",
+		"src/led/type/RgbLed.ts",
+		"src/meteor.ts",
+		"src/meteor/call.ts",
+		"src/meteor/ddp.ts",
+		"src/meteor/subscribe.ts",
+		"node_modules/typescript/lib/lib.es6.d.ts",
+		"typings/tsd.d.ts"
+	],
+	"atom": {
+		"rewriteTsconfig": true
+	}
+}
