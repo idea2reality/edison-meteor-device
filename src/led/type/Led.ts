@@ -1,4 +1,4 @@
-abstract class Led {
+export abstract class Led {
     private id;
     protected value;
     protected protocFormat;
@@ -12,5 +12,3 @@ abstract class Led {
 
     abstract setValue(status): Promise<any>;
 }
-
-export default Led;

@@ -1,3 +1,4 @@
+import * as winston from 'winston';
 import {ddpClient} from './ddp';
 import {DEVICES_INBOX_COLLECTION_NAME, MY_DEVICE_ID} from '../config';
 
@@ -8,21 +9,24 @@ export function subscribeInbox(onNewMessage: (msg: any) => void) {
 
         // Observe a collection.
         var observer = ddpClient.observe(DEVICES_INBOX_COLLECTION_NAME);
+        // Register listeners
+        observer.added = onAdd;
+        observer.changed = onChange;
+        observer.removed = onRemove;
 
-        observer.added = function(msgId) {
+        function onAdd(msgId) {
             var msg = ddpClient.collections[DEVICES_INBOX_COLLECTION_NAME][msgId];
-            console.log("[ADDED] to " + observer.name + ":  " + msgId);
+            winston.verbose('Added to (%s)', observer.name, msg);
 
             onNewMessage(msg);
         }
-        observer.changed = function(id, oldFields, clearedFields) {
-            console.log("[CHANGED] in " + observer.name + ":  " + id);
-            console.log("[CHANGED] old field values: ", oldFields);
-            console.log("[CHANGED] cleared fields: ", clearedFields);
+
+        function onChange(id, oldFields, clearedFields) {
+            winston.verbose('Changed in (%s)', observer.name, id)
         };
-        observer.removed = function(id, oldValue) {
-            console.log("[REMOVED] in " + observer.name + ":  " + id);
-            console.log("[REMOVED] previous value: ", oldValue);
+
+        function onRemove(id, oldValue) {
+            winston.verbose('Removed from (%s)', observer.name, oldValue);
         };
     });
 }

@@ -10,3 +10,19 @@ export const LED = {
         baudrate: 9600
     }
 };
+
+export function setEnvironments() {
+    // Promise
+    global.Promise = require('bluebird');
+    // Map
+    if (typeof global.Map === 'undefined')
+        global.Map = require('hashmap');
+    // Winston
+    var winston = require('winston');
+    winston.remove(winston.transports.Console);
+    winston.add(winston.transports.Console, {
+        timestamp: function() { return new Date().toLocaleString() },
+        colorize: true
+    });
+    winston.level = 'debug';
+}

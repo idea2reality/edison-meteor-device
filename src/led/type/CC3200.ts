@@ -1,10 +1,7 @@
-import Led from '../Led';
-import serial from '../Serial';
-// import serial from '../Serial.test';
-import {LED as config} from '../../config';
+import {Led} from './Led';
+import {serial} from '../Serial';
 
-
-export default class CC3200 extends Led {
+export class CC3200 extends Led {
 
     protected value: boolean;
 

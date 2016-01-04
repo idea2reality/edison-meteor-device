@@ -1,7 +1,9 @@
+import * as winston from 'winston';
 import {MY_DEVICE_ID, LED} from '../config';
-import CC3200 from './type/CC3200';
-import Led from './Led';
+import {Led, CC3200, CC3200Dim} from './type';
 import {ddpClient} from '../meteor';
+
+export var ledManager: LedManager;
 
 class LedManager {
     private ledMap: Map<string, Led>;
@@ -14,23 +16,32 @@ class LedManager {
         return new Promise((resolve, reject) =>
             ddpClient.subscribe('device', [MY_DEVICE_ID], () => {
                 var leds: any[] = ddpClient.collections.devices[MY_DEVICE_ID].leds;
-                for (let led of leds) {
-                    if (led.type == 'cc3200')
-                        this.ledMap.set(led._id, new CC3200(led._id))
-                }
+                for (let led of leds)
+                    this.addLed(led)
 
                 resolve();
             }));
     }
 
-    getLed(id: string): Led { return this.ledMap.get(id); }
+    addLed(data) {
+        if (data.type === 'cc3200')
+            this.ledMap.set(data._id, new CC3200(data._id))
+        else if (data.type === 'cc3200-dim')
+            this.ledMap.set(data._id, new CC3200Dim(data._id, data.protocol));
+        else
+            console.error('Unrecognizable LED type: ' + data.type);
+
+        winston.info('LED added', this.ledMap.get(data._id).constructor.name, data);
+    }
+
+    private getLed(id: string): Led { return this.ledMap.get(id); }
 
     setLed(ledId: string, value): Promise<any> {
         return new Promise((resolve, reject) => {
             var led = this.getLed(ledId);
 
             if (led === undefined)
-                reject(new Error('No such LED'));
+                return reject(new Error('No such LED'));
 
             led.setValue(value)
                 .then(resolve)
@@ -49,4 +60,4 @@ class LedManager {
     }
 }
 
-export default LedManager.getInstance();
+ledManager = LedManager.getInstance();

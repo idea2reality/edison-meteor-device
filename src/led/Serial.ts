@@ -1,6 +1,8 @@
 import {LED as config} from '../config';
 import * as winston from 'winston';
 
+export var serial: Serial;
+
 var isDev = process.env.NODE_ENV === 'development';
 
 var mraa;
@@ -51,7 +53,7 @@ class Serial {
 
             // DEVELOPMENT MODE
             if (isDev) {
-                winston.info('[led] Serial: Written -> ' + protoc);
+                winston.verbose('[led] Serial: Written -> ' + protoc);
                 resolve();
                 return;
             }
@@ -62,7 +64,7 @@ class Serial {
                 // Waits until all output data has been transmitted to the serial port
                 this.serialPort.drain((err) => {
                     if (err) return reject(err);
-                    winston.info('[led] Serial: Written -> ' + protoc);
+                    winston.verbose('[led] Serial: Written -> ' + protoc);
                     resolve();
                 });
             })
@@ -71,13 +73,15 @@ class Serial {
 
     private initialize() {
         this.serialPort = new SerialPort(SERIAL_PATH, config.serialportOption);
-        this.serialPort.on('open', () => {
-            winston.info('[led] Serial: Serial port OPEN at', SERIAL_PATH);
-        });
-        this.serialPort.on('data', (data) => winston.info('[led] Serial: Received -> ' + data));
+        this.serialPort.on('open', () =>
+            winston.info('Serial port OPEN at', SERIAL_PATH));
+        this.serialPort.on('data', (data) =>
+            winston.verbose('[led] Serial: Received -> ' + data));
     }
 
-
+    /*
+     * Static
+     */
     private static instance: Serial;
 
     static getInstance(): Serial {
@@ -88,4 +92,4 @@ class Serial {
     }
 }
 
-export default Serial.getInstance();
+serial = Serial.getInstance();

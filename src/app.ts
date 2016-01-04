@@ -1,29 +1,38 @@
-// NodeJS 0.10 version does not support Promise
-if (typeof global.Promise === 'undefined')
-    global.Promise = require('bluebird');
-if (typeof global.Map === 'undefined')
-    global.Map = require('hashmap');
+// Set application environments
+import {setEnvironments} from './config';
+setEnvironments();
 
+// Start application
 import * as winston from 'winston';
-winston.level = 'debug';
-
-import {MY_DEVICE_ID, HOST, DEVICES_INBOX_COLLECTION_NAME} from './config';
-import ledManager from './led/LedManager';
+import {ledManager} from './led';
 import {ddpClient, startup, subscribeInbox, applyLed, cancelLed} from './meteor';
+import {MY_DEVICE_ID, HOST, DEVICES_INBOX_COLLECTION_NAME} from './config';
 
-startup()
-    .then((wasReconnect) => {
-        if (wasReconnect) {
-            console.log('Reconnected at', new Date().toLocaleTimeString());
-        }
+// Startup logic
+startup(onConnection)
+    .then(() => {
+        // Log every ddp message
+        ddpClient.on('message', (msg) => winston.debug("ddp message", msg));
 
-        console.log('Connected!');
+        ddpClient.on('socket-close', (code, message) =>
+            winston.info("socket-close", code, message));
+
+        ddpClient.on('socket-error', (error) =>
+            winston.error("socket-error", error));
     })
     .then(() => { return ledManager.loadLeds() })
     .then(() => { return subscribeInbox(onNewMessage) })
 
+// On connection
+function onConnection(wasReconnect) {
+    if (wasReconnect)
+        winston.info('Reconnected');
+    winston.info('Connected');
+}
+
+// On new message in inbox
 function onNewMessage(msg) {
     ledManager.setLed(msg.ledId, msg.value)
         .then(() => { return applyLed(msg._id, msg.value) })
-        .catch((reason) => {console.log(reason); return cancelLed(msg._id, reason) });
+        .catch((reason) => { return cancelLed(msg._id, reason) });
 }
