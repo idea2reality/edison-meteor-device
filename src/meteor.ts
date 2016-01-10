@@ -1,3 +1,3 @@
-export * from './meteor/ddp'
-export * from './meteor/subscribe'
-export * from './meteor/call'
+export * from './meteor/ddp';
+export * from './meteor/methods';
+export * from './meteor/collections';

@@ -16,6 +16,9 @@
     },
     "bluebird/bluebird.d.ts": {
       "commit": "fe563dff3428bac1260d1794e2c2ecf8f097535a"
+    },
+    "underscore/underscore.d.ts": {
+      "commit": "904c8f9e03853324a5588564d6db0d2e7e0c6aba"
     }
   }
 }

@@ -10,6 +10,7 @@ export class CC3200Dim extends Led {
     }
 
     makeProtocol(value: number[]): number[] {
-        return this.protocFormat.prefix.concat(value, this.protocFormat.postfix);
+        // [02, ID, R, G, B, 03]
+        return this.protocFormat.prefix.concat(this.id, value, this.protocFormat.postfix);
     }
 }

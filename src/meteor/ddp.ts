@@ -13,18 +13,29 @@ export var ddpClient = new DDPClient({
     useSockJs: true
 });
 
+var connectListeners = [];
+var connectPromise: Promise<any>;
+
 /*
  * Connect to the Meteor Server
  * Resolved with true return value if it is reconnected
  */
-export function startup(connectListener?: (wasReconnect: boolean) => void): Promise<any> {
-    return new Promise((resolve, reject) => {
-        ddpClient.connect((err, wasReconnect) => {
-            if (err)
-                return reject(err);
+export function connect(connectListener?: (wasReconnect: boolean) => void): Promise<any> {
+    if (typeof connectListener === 'function')
+        connectListeners.push(connectListener);
 
-            connectListener(wasReconnect);
-            resolve(wasReconnect);
+    if (connectPromise === undefined)
+        connectPromise = new Promise((resolve, reject) => {
+            ddpClient.connect((err, wasReconnect) => {
+                if (err)
+                    return reject(err);
+
+                resolve(wasReconnect);
+
+                for (let listener of connectListeners)
+                    listener(wasReconnect);
+            });
         });
-    });
+
+    return connectPromise;
 }

@@ -1,9 +1,8 @@
-import {LED as config} from '../config';
+import {LED as config, DEVELOPMENT_MODE} from '../config';
 import * as winston from 'winston';
 
 export var serial: Serial;
 
-var isDev = process.env.NODE_ENV === 'development';
 
 var mraa;
 var uart;
@@ -11,7 +10,7 @@ var SERIAL_PATH;
 var SerialPort;
 
 // DEVELOPMENT MODE
-if (!isDev) {
+if (!DEVELOPMENT_MODE) {
     mraa = require('mraa');
     uart = new mraa.Uart(0);
     SERIAL_PATH = uart.getDevicePath();
@@ -24,13 +23,13 @@ class Serial {
 
     constructor() {
         // DEVELOPMENT MODE
-        if (!isDev)
+        if (!DEVELOPMENT_MODE)
             this.initialize();
     }
 
     get isOpen(): boolean {
         // DEVELOPMENT MODE
-        if (isDev)
+        if (DEVELOPMENT_MODE)
             return true;
 
         if (this.serialPort === undefined)
@@ -52,8 +51,8 @@ class Serial {
                 buf = new Buffer(protoc);
 
             // DEVELOPMENT MODE
-            if (isDev) {
-                winston.verbose('[led] Serial: Written -> ' + protoc);
+            if (DEVELOPMENT_MODE) {
+                winston.info('[led] Serial: Written -> ' + protoc);
                 resolve();
                 return;
             }
@@ -64,7 +63,7 @@ class Serial {
                 // Waits until all output data has been transmitted to the serial port
                 this.serialPort.drain((err) => {
                     if (err) return reject(err);
-                    winston.verbose('[led] Serial: Written -> ' + protoc);
+                    winston.info('[led] Serial: Written -> ' + protoc);
                     resolve();
                 });
             })
@@ -76,7 +75,7 @@ class Serial {
         this.serialPort.on('open', () =>
             winston.info('Serial port OPEN at', SERIAL_PATH));
         this.serialPort.on('data', (data) =>
-            winston.verbose('[led] Serial: Received -> ' + data));
+            winston.info('[led] Serial: Received -> ' + data));
     }
 
     /*

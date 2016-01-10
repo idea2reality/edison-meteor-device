@@ -1,5 +1,5 @@
 export abstract class Led {
-    private id;
+    protected id;
     protected value;
     protected protocFormat;
 
@@ -11,4 +11,8 @@ export abstract class Led {
     getStatus() { return this.value; }
 
     abstract setValue(status): Promise<any>;
+
+    updateId(newId) {
+        this.id = newId;
+    }
 }

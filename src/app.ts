@@ -5,31 +5,35 @@ setEnvironments();
 // Start application
 import * as winston from 'winston';
 import {ledManager} from './led';
-import {ddpClient, startup, subscribeInbox, applyLed, cancelLed} from './meteor';
+import {ddpClient, connect, applyLed, cancelLed, Devices} from './meteor';
 import {MY_DEVICE_ID, HOST, DEVICES_INBOX_COLLECTION_NAME} from './config';
+import {subscribeAll} from './app/subscribe';
 
 // Startup logic
-startup(onConnection)
+connect(onConnection)
     .then(() => {
         // Log every ddp message
-        ddpClient.on('message', (msg) => winston.debug("ddp message", msg));
+        ddpClient.on('message', (msg) => winston.verbose("ddp message", msg));
 
         ddpClient.on('socket-close', (code, message) =>
             winston.info("socket-close", code, message));
 
         ddpClient.on('socket-error', (error) =>
             winston.error("socket-error", error));
-    })
-    .then(() => { return ledManager.loadLeds() })
-    .then(() => { return subscribeInbox(onNewMessage) })
+    });
 
-// On connection
+// On connection listener
 function onConnection(wasReconnect) {
     if (wasReconnect)
         winston.info('Reconnected');
+
     winston.info('Connected');
+
+    subscribeAll()
+        .then(() => ledManager.initialize());
 }
 
+// TODO: DELETE HERE
 // On new message in inbox
 function onNewMessage(msg) {
     ledManager.setLed(msg.ledId, msg.value)

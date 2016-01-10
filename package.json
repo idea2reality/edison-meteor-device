@@ -1,5 +1,5 @@
 {
-  "name": "i2r-edison-device",
+  "name": "i2r-edison-meteor-device",
   "main": "js/app.js",
   "version": "0.0.0",
   "description": "",
@@ -9,6 +9,7 @@
     "ddp": "^0.11.0",
     "hashmap": "^2.0.3",
     "serialport": "^2.0.5",
+    "underscore": "^1.8.3",
     "winston": "^1.1.2"
   },
   "devDependencies": {
