@@ -72,7 +72,7 @@ class Serial {
         this.serialPort.on('open', () =>
             winston.info('Serial port OPEN at', SERIAL_PATH));
         this.serialPort.on('data', (data) =>
-            winston.info('[led] Serial: Received -> ' + data));
+            winston.info('[led] Serial: Received -> ' + data.toString('hex')));
     }
 
     /*
