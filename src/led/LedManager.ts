@@ -56,7 +56,7 @@ class ModuleManager {
 
         let protoc = new Array(6)
 
-        for(let i in protoc)
+        for(let i = 0; i < protoc.length; i++)
           protoc[i] = ''
 
         protoc[0] = Things.findOne().protoc.pre
