@@ -77,7 +77,7 @@ class ModuleManager {
         winston.verbose('Converted protocol:' + protoc)
 
         for (let i = 1; i < 5; i++)
-            protoc[i] = Number('0b' + protoc[i])
+            protoc[i] = Number.parseInt(protoc[i], 2)
 
         return serial.write(protoc)
     }
