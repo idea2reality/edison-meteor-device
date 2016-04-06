@@ -54,7 +54,11 @@ class ModuleManager {
 
         module.value = value
 
-        let protoc = new Array(6).fill('')
+        let protoc = new Array(6)
+
+        for(let i in protoc)
+          protoc[i] = ''
+
         protoc[0] = Things.findOne().protoc.pre
         protoc[5] = Things.findOne().protoc.post
 
