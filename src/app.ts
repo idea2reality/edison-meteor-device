@@ -4,9 +4,9 @@ setEnvironments();
 
 // Start application
 import * as winston from 'winston';
-import {ledManager} from './led';
-import {ddpClient, connect, applyLed, cancelLed, Devices} from './meteor';
-import {MY_DEVICE_ID, HOST, DEVICES_INBOX_COLLECTION_NAME} from './config';
+import {moduleManager} from './led';
+import {ddpClient, connect, applyLed, cancelLed, Things} from './meteor';
+import {MY_DEVICE_ID, HOST, THINGS_INBOX_COL_NAME} from './config';
 import {subscribeAll} from './app/subscribe';
 
 // Startup logic
@@ -30,13 +30,5 @@ function onConnection(wasReconnect) {
     winston.info('Connected');
 
     subscribeAll()
-        .then(() => ledManager.initialize());
-}
-
-// TODO: DELETE HERE
-// On new message in inbox
-function onNewMessage(msg) {
-    ledManager.setLed(msg.ledId, msg.value)
-        .then(() => { return applyLed(msg._id, msg.value) })
-        .catch((reason) => { return cancelLed(msg._id, reason) });
+        .then(() => moduleManager.initialize());
 }

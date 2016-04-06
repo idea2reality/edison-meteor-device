@@ -1,9 +1,6 @@
 import {LED as config, DEVELOPMENT_MODE} from '../config';
 import * as winston from 'winston';
 
-export var serial: Serial;
-
-
 var mraa;
 var uart;
 var SERIAL_PATH;
@@ -91,4 +88,4 @@ class Serial {
     }
 }
 
-serial = Serial.getInstance();
+export const serial = Serial.getInstance();

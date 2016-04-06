@@ -1,8 +1,8 @@
 import {ddpClient} from './ddp';
 
-export function applyLed(msgId: string, value): Promise<any> {
+export function applyLed(msgId: string): Promise<any> {
     return new Promise((resolve, reject) =>
-        ddpClient.call('applyLed', [msgId, value], (err, result) => {
+        ddpClient.call('applyLed', [msgId], (err, result) => {
             if (err) return reject(err);
 
             resolve(result);

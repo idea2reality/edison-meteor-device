@@ -1,6 +1,10 @@
-import {Collection} from './minimongo';
-import {DEVICES_COLLECTION_NAME, DEVICES_INBOX_COLLECTION_NAME} from '../config';
+import { Collection } from './minimongo';
+import {
+    THINGS_COL_NAME,
+    THINGS_INBOX_COL_NAME,
+    MODULES_COL_NAME
+} from '../config';
 
-export var Devices = new Collection(DEVICES_COLLECTION_NAME);
-
-export var DevicesInbox = new Collection(DEVICES_INBOX_COLLECTION_NAME);
+export const Things = new Collection(THINGS_COL_NAME);
+export const ThingsInbox = new Collection(THINGS_INBOX_COL_NAME);
+export const Modules = new Collection(MODULES_COL_NAME)

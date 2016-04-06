@@ -17,6 +17,7 @@
 		"src/app/subscribe.ts",
 		"src/app/subscribe/device.ts",
 		"src/app/subscribe/inbox.ts",
+		"src/app/subscribe/module.ts",
 		"src/config.ts",
 		"src/led.ts",
 		"src/led/LedManager.ts",

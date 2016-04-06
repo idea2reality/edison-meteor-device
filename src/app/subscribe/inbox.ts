@@ -1,16 +1,13 @@
 import * as winston from 'winston';
 import * as _ from 'underscore';
 import {ddpClient} from '../../meteor';
-import {DEVICES_INBOX_COLLECTION_NAME, MY_DEVICE_ID, DEVICES_INBOX_SUBSCRIVE_NAME} from '../../config';
-import {ledManager} from '../../led';
+import {THINGS_INBOX_COL_NAME, MY_DEVICE_ID, THINGS_INBOX_SUB_NAME} from '../../config';
+import {moduleManager} from '../../led';
 
-export function subscribeDevicesInbox(onNewMessage?: (msg: any) => void): Promise<any> {
-    if (typeof onNewMessage !== 'function')
-        onNewMessage = function() { }
-
+export function subscribeDevicesInbox(): Promise<any> {
     return new Promise((resolve, reject) => {
         // Watching my inbox
-        ddpClient.subscribe(DEVICES_INBOX_SUBSCRIVE_NAME, [MY_DEVICE_ID], resolve);
+        ddpClient.subscribe(THINGS_INBOX_SUB_NAME, [MY_DEVICE_ID], resolve);
     })
-        .then(() => winston.info('Subscribe', DEVICES_INBOX_COLLECTION_NAME))
+        .then(() => winston.info('Subscribe', THINGS_INBOX_COL_NAME))
 }

@@ -1,11 +1,13 @@
-export const MY_DEVICE_ID = 'edison';
+export const MY_DEVICE_ID = 'edison'
 // export const HOST = 'http://edison.idea2r.io/edisons';
-export const HOST = 'localhost';
-export const PORT = 3000;
-export const DEVICES_INBOX_COLLECTION_NAME = 'things.inbox';
-export const DEVICES_INBOX_SUBSCRIVE_NAME = 'myInbox';
-export const DEVICES_COLLECTION_NAME = 'things';
-export const DEVICES_SUBSCRIBE_NAME = 'things';
+export const HOST = 'localhost'
+export const PORT = 3000
+export const THINGS_INBOX_COL_NAME = 'things.inbox'
+export const THINGS_INBOX_SUB_NAME = 'myInbox'
+export const THINGS_COL_NAME = 'things'
+export const THINGS_SUB_NAME = 'things'
+export const MODULES_COL_NAME = 'modules'
+export const MODULES_SUB_NAME = 'modules'
 export const DEVELOPMENT_MODE = process.env.NODE_ENV === 'development';
 export const LED = {
     BASIC_LED_PROTOCOL_FORMAT: [2, 1, 1, 0x10, 0, 0, 0, 84, 3],
